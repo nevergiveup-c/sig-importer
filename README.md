@@ -1,4 +1,4 @@
-# sig-importer
+# Signature Importer
 
 ## Description:
 IDA Pro 9.x Plugin that automatically transfers the progress between dumps by using special *.json file that defines a number of fields for finding and signing addresses. 
@@ -37,11 +37,11 @@ The plugin uses JSON files to define signature patterns and their associated met
 | Field | Required | Description |
 |-------|----------|-------------|
 | `signature` | + | Byte pattern with wildcards (`?` for unknown bytes) |
-| `name` | - | Sets symbol name at found address |
+| `name` | - | Sets name at address |
 | `cmt` | - | Adds comment to address or function |
 | `color` | - | Sets background color (RGB number) |
 | `offset` | - | Offset to apply to found address |
-| `rip_layout` | - | For RIP-relative `[opcodes, data] ([prefix][rex][opcode][modr/m][imm][displ])` |
+| `rip_layout` | - | RIP-relative format `[opcode_len, data_len]` |
 
 #### Example Configuration
 
@@ -65,6 +65,6 @@ The plugin uses JSON files to define signature patterns and their associated met
         "signature": "48 8B 05 ? ? ? ? 4C 8B 14 D0",
         "rip_layout": [3, 4],
         "cmt": "Resolves global variable reference"
-    },
+    }
 ]
 ```
