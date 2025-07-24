@@ -10,8 +10,7 @@
 #include "typeinf.hpp"
 
 bool Plugin::run(size_t arg) {
-
-    const auto [eaStart, eaEnd] = dialog::getEaRange();
+    const auto [eaStart, eaEnd] = dialog::mainDialog();
 
     if (eaStart == 0 || eaEnd == 0) {
         LOG_ERROR("Failed to get search range\n")

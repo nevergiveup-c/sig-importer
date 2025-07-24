@@ -40,7 +40,12 @@ namespace dialog {
         buffer[size] = '\0';
         qfclose(file);
 
-        return nlohmann::json::parse(buffer.data());
+        try {
+            return nlohmann::json::parse(buffer.data());
+        } catch (const nlohmann::json::parse_error& e) {
+            LOG_ERROR("Failed to parse json: %s\n", e.what());
+            return nlohmann::json{};
+        }
     }
     std::pair<ea_t, ea_t> getSegmentSpace(qstring& name) {
 
@@ -70,13 +75,16 @@ namespace dialog {
         int choice{ 1 };
 
         static constexpr char form[] =
-        "Choose search scope:\n"
+        "Signature importer settings\n"
         "\n"
+        "Choose search scope:\n"
         "<~G~lobal (search in entire binary):R>\n"
         "<~S~egment only (search in selected segment, recommended):R>>\n"
+        "Debug options:\n"
+        "<~E~nable debug output:C>>\n"
         "\n";
 
-        if (ask_form(form, &choice) > 0) {
+        if (ask_form(form, &choice, &gDebugOutput) > 0) {
             if (choice == 0) {
                 return shared::getGlobalSpace();
             }
