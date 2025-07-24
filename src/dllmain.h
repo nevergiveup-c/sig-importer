@@ -14,6 +14,7 @@ public:
 
 #define PLUGIN_NAME "Signature importer"
 #define PLUGIN_HOTKEY "Ctrl+Shift+F10"
+#define PLUGIN_VERSION "1.0.1"
 
 plugmod_t* idaapi init();
 
@@ -23,7 +24,7 @@ plugin_t PLUGIN {
     init,
     nullptr,
     nullptr,
-    PLUGIN_NAME " 9x for IDA Pro by nevergiveup-c",
+    PLUGIN_NAME " v" PLUGIN_VERSION " for IDA Pro 9.x by nevergiveup-c",
     "1. Run the plugin.\n"
     "2. Choose search scope: Global or segment only.\n"
     "3. If segment only selected, enter segment name (e.g., .text).\n"

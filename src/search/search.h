@@ -31,7 +31,7 @@ private:
     region_t mRegion{};
     std::vector<pattern_t> mPatterns;
 
-    bool scan(const qstring& sig, const callback_t& callback) const;
+    [[nodiscard]] bool scan(const qstring& sig, const callback_t& callback) const;
 };
 
 #endif //BATCH_H

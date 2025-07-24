@@ -12,7 +12,8 @@ file(GLOB_RECURSE SOURCES
         "src/shared/*.h"
         "src/search/*.h"
         "src/search/*.cpp"
-        "src/serialize/*.h"
+        "src/import/*.h"
+        "src/import/*.cpp"
         "src/headers-only/*.cpp"
         "src/headers-only/*.h"
         "src/*.cpp"
@@ -28,7 +29,7 @@ target_include_directories(sig_importer
         "${CMAKE_SOURCE_DIR}/src/shared"
         "${CMAKE_SOURCE_DIR}/src/headers-only"
         "${CMAKE_SOURCE_DIR}/src/search"
-        "${CMAKE_SOURCE_DIR}/src/serialize"
+        "${CMAKE_SOURCE_DIR}/src/import"
         "${CMAKE_SOURCE_DIR}/src"
         PUBLIC
         "${IDA_INCLUDE_DIR}"
