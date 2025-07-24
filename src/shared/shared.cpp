@@ -71,7 +71,7 @@ namespace dialog {
 
         return { segment->start_ea, end > 0 ? end : eaMax };
     }
-    std::pair<ea_t, ea_t> getEaRange() {
+    std::pair<ea_t, ea_t> mainDialog() {
         int choice{ 1 };
 
         static constexpr char form[] =
