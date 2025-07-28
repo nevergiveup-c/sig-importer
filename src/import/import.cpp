@@ -87,7 +87,7 @@ bool Import::adjustAddress(ea_t &address) const {
         }
         else if (op.mType == eRipCalc) {
             if (auto const data = address + op.mOpcodeLength; is_loaded(data)) {
-                auto const relOffset = get_dword(address + op.mOpcodeLength);
+                auto const relOffset = static_cast<int32_t>(get_dword(address + op.mOpcodeLength));
                 auto const nextInsn = address + op.mOpcodeLength + op.mDisplLength;
                 address = nextInsn + relOffset;
             }
