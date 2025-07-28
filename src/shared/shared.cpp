@@ -20,7 +20,7 @@ namespace dialog {
             return nlohmann::json{};
         }
 
-       auto const file = qfopen(path, "r");
+       auto const file = qfopen(path, "rb");
 
         if (file == nullptr) {
             LOG_ERROR("Failed to get a file\n");
@@ -35,9 +35,13 @@ namespace dialog {
             return nlohmann::json{};
         };
 
-        std::vector<char> buffer(size + 1);
-        qfread(file, buffer.data(), size);
-        buffer[size] = '\0';
+        std::vector<char> buffer(size);
+        if (auto const bytesRead = qfread(file, buffer.data(), size); bytesRead != size) {
+            LOG_ERROR("Failed to read complete file: read %zu bytes, expected %zu\n",
+                      bytesRead, size);
+            qfclose(file);
+            return nlohmann::json{};
+        }
         qfclose(file);
 
         try {
