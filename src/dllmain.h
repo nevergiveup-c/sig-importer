@@ -14,7 +14,7 @@ public:
 
 #define PLUGIN_NAME "Signature importer"
 #define PLUGIN_HOTKEY "Ctrl+Shift+F10"
-#define PLUGIN_VERSION "1.0.2"
+#define PLUGIN_VERSION "1.0.3"
 
 plugmod_t* idaapi init();
 
