@@ -103,29 +103,28 @@ bool Import::adjustAddress(ea_t &address) const {
 void Import::setName(ea_t const address) const {
     if (!mData.mName.empty()) {
         if (!set_name(address, mData.mName.c_str(), SN_NOCHECK)) {
-            LOG_ERROR("Failed to set name: %s (0x%X)\n", address, mData.mName.c_str());
+            LOG_ERROR("Failed to set name: %s (0x%X)\n", mData.mName.c_str(), address);
         }
     }
 }
 
 void Import::setDeclaration(ea_t const address) const {
     if (!mData.mDeclaration.empty()) {
+        if (!shared::hasTypeInfo(address)) {
+            LOG_ERROR("Failed to set declaration, address doesn't support type info: %s (0x%X)\n",
+                mData.mDeclaration.c_str(), address);
+            return;
+        }
+
         tinfo_t tif{};
         qstring name{};
-
-        if (parse_decl(&tif, &name, nullptr, mData.mDeclaration.c_str(), PT_TYP | PT_VAR | PT_SIL)) {
+        if (parse_decl(&tif, &name, nullptr, mData.mDeclaration.c_str(), PT_TYP | PT_VAR | PT_SIL) && tif.is_correct()) {
             if (!set_tinfo(address, &tif)) {
-                LOG_ERROR("Failed to set declaration: %s (0x%X)\n", name.c_str(), address);
+                LOG_ERROR("Failed to set declaration: %s (0x%X)\n", mData.mDeclaration.c_str(), address);
             }
         }
         else {
             LOG_ERROR("Failed to parse declaration: %s", mData.mDeclaration.c_str());
-        }
-
-        if (mData.mName.empty() && !name.empty()) {
-            if (!set_name(address, name.c_str(), SN_NOCHECK)) {
-                LOG_ERROR("Failed to set name: %s (0x%X)\n", name.c_str(), address);
-            }
         }
     }
 }

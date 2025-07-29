@@ -13,6 +13,7 @@ inline bool gDebugOutput{ false };
 
 namespace shared {
     std::pair<ea_t, ea_t> getGlobalSpace();
+    bool hasTypeInfo(ea_t address);
 }
 
 namespace dialog {

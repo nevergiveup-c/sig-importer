@@ -3,16 +3,22 @@
 #include "fpro.h"
 #include "kernwin.hpp"
 #include "segment.hpp"
+#include "nalt.hpp"
+#include "typeinf.hpp"
 
 namespace shared {
     std::pair<ea_t, ea_t> getGlobalSpace() {
         return { inf_get_min_ea(), inf_get_max_ea() };
     }
+
+    bool hasTypeInfo(const ea_t address) {
+        auto const flags = get_flags(address);
+        return is_func(flags) || is_data(flags) || is_unknown(flags);
+    }
 }
 
 namespace dialog {
     nlohmann::json parseJson(const char* fmt2) {
-
         auto const path = ask_file(false, ".json", fmt2);
 
         if (path == nullptr) {
@@ -35,13 +41,14 @@ namespace dialog {
             return nlohmann::json{};
         };
 
-        std::vector<char> buffer(size);
+        std::vector<char> buffer(size + 1);
         if (auto const bytesRead = qfread(file, buffer.data(), size); bytesRead != size) {
             LOG_ERROR("Failed to read complete file: read %zu bytes, expected %zu\n",
                       bytesRead, size);
             qfclose(file);
             return nlohmann::json{};
         }
+        buffer[size] = '\0';
         qfclose(file);
 
         try {
