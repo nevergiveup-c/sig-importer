@@ -13,8 +13,8 @@ public:
 };
 
 #define PLUGIN_NAME "Signature importer"
+#define PLUGIN_VERSION "1.0.4"
 #define PLUGIN_HOTKEY "Ctrl+Shift+F10"
-#define PLUGIN_VERSION "1.0.3"
 
 plugmod_t* idaapi init();
 
@@ -26,9 +26,11 @@ plugin_t PLUGIN {
     nullptr,
     PLUGIN_NAME " v" PLUGIN_VERSION " for IDA Pro 9.x by nevergiveup-c",
     "1. Run the plugin.\n"
-    "2. Choose search scope: Global or segment only.\n"
-    "3. If segment only selected, enter segment name (e.g., .text).\n"
-    "4. Choose *.json file (json format you can see in README.md).\n"
+    "2. Choose search scope: global, segment only or custom.\n"
+    "Search descriptions:\n"
+    " - If segment only is selected, enter segment name (e.g., .text);\n"
+    " - If custom is selected, enter start and end address (e.g., 0x1000 - 0x100000);\n"
+    "4. Choose *.json file (you can see json format in README.md).\n"
     "5. Wait for the scanning process to complete.",
     PLUGIN_NAME,
     PLUGIN_HOTKEY
