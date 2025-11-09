@@ -1,39 +1,48 @@
 # Signature Importer
 
 ## Description:
-IDA Pro 9.x Plugin that automatically transfers the progress between dumps by using special *.json file that defines a number of fields for finding and signing addresses. 
-The provided plugin is a PET project developed while learning IDA SDK C++.
+IDA Pro 9.x Plugin that automatically transfers the progress between dumps by using special *.json file that defines a number of fields for finding and signing addresses.
 
 ## Requirements:
-IDA Pro 9.x **only**
+IDA Pro 9.x **only**.
+
+## Transfer capabilities:
+- Names (functions and variables)
+- Type declarations (functions and variables)
+- Comments (anything)
+- Colors (anything)
+- Breakpoints (anything)
 
 ## Installation:
 Put it into plugins folder of **your** IDA installation.
 
 ## Usage:
-
-Launch the plugin by pressing hotkey (by default “**Ctrl+Shift+F10**”) or via **Edit -> Plugin -> Signature Importer**. Select the search area in the window appeared, for large binaries “Segment only” is recommended.
+Launch the plugin by pressing hotkey (by default “**Ctrl+Shift+F10**”) or via **Edit -> Plugin -> Signature Importer**. Select the search area in the window appeared, for large binaries **“Segment only”** or **"Custom"** is recommended.
 
 ![Step 0](images/usage_step_0.png)
 
-If you select “Segment only” you will need to enter the segment name (default is .text). When selecting “Global” segment selection is skipped and we proceed to the next step.
+When selecting **“Global”**, we skip entering segment name and address range and proceed to json file selection.\
+If you select **“Segment only”** you will need to enter the segment name (default is .text).
 
 ![Step 1](images/usage_step_1.png)
 
-Select *.json with signatures and wait for the search and signing to complete.
+If you select **“Custom”** you will need to enter the range: start and end address (default is 0x1000 - 0x100000).
 
 ![Step 2](images/usage_step_2.png)
 
+ Select *.json with signatures and wait for the search and signing to complete.
+
 ![Step 3](images/usage_step_3.png)
 
+## Result:
 ![Step 4](images/usage_step_4.png)
 
-### JSON Configuration Format
+![Step 4](images/usage_step_5.png)
 
-The plugin uses JSON files to define signature patterns and their associated metadata. Each pattern is an object in a JSON array.
+## JSON Configuration Format
+The plugin uses **JSON files** to define signature patterns and their associated metadata. Each pattern is an object in a JSON array.
 
-#### Field Reference
-
+## Field Reference
 | Field                      | Required | Type | Description                                                                                                                                                                                                                                                                          |
 |----------------------------|----------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `signature`                | + | string | Byte pattern with wildcards (`?` or `??` for unknown bytes)                                                                                                                                                                                                                          |
@@ -46,8 +55,7 @@ The plugin uses JSON files to define signature patterns and their associated met
 | `operations[].insn_format` | - | array | Is used for obtaining relative offset. Calculation is performed as follows: for instruction at 0x1000 `"E8 12 34 56 78"` with format `[1,4]`: `rip = 0x1000 + 1 + 4`, `rel_offset = read_dword(0x1000 + 1)`, `final_address = rip + rel_offset`                                      |
 | `breakpoint`               | - | array | Breakpoint configuration `[exist, type, size]`. Type: 0=software+execute (default), 1=write, 2=read, 3=read/write, 4=software, 8=execute, 12=default. Size is irrelevant for software breakpoints. For hardware breakpoints size matters but can't always be set to arbitrary values |
 
-#### Example Configuration
-
+## Example Configuration
 ```json
 [
   {
