@@ -58,7 +58,7 @@ Import::Import(const nlohmann::json &j) {
 
 bool Import::handle(ea_t address) const {
     if (!adjustAddress(address)) {
-        LOG_ERROR("Failed to adjust address: 0x%X\n", address);
+        LOG_ERROR("Failed to adjust address: 0x%p\n", address);
         return false;
     }
 
@@ -68,7 +68,7 @@ bool Import::handle(ea_t address) const {
     setColor(address);
     setBreakpoint(address);
 
-    LOG_DEBUG("Success: 0x%X\n", address);
+    LOG_DEBUG("Success: 0x%p\n", address);
 
     return true;
 }
@@ -103,7 +103,7 @@ bool Import::adjustAddress(ea_t &address) const {
 void Import::setName(ea_t const address) const {
     if (!mData.mName.empty()) {
         if (!set_name(address, mData.mName.c_str(), SN_NOCHECK)) {
-            LOG_ERROR("Failed to set name: %s (0x%X)\n", mData.mName.c_str(), address);
+            LOG_ERROR("Failed to set name: %s (0x%p)\n", mData.mName.c_str(), address);
         }
     }
 }
@@ -111,7 +111,7 @@ void Import::setName(ea_t const address) const {
 void Import::setDeclaration(ea_t const address) const {
     if (!mData.mDeclaration.empty()) {
         if (!shared::hasTypeInfo(address)) {
-            LOG_ERROR("Failed to set declaration, address doesn't support type info: %s (0x%X)\n",
+            LOG_ERROR("Failed to set declaration, address doesn't support type info: %s (0x%p)\n",
                 mData.mDeclaration.c_str(), address);
             return;
         }
@@ -120,7 +120,7 @@ void Import::setDeclaration(ea_t const address) const {
         qstring name{};
         if (parse_decl(&tif, &name, nullptr, mData.mDeclaration.c_str(), PT_TYP | PT_VAR | PT_SIL) && tif.is_correct()) {
             if (!set_tinfo(address, &tif)) {
-                LOG_ERROR("Failed to set declaration: %s (0x%X)\n", mData.mDeclaration.c_str(), address);
+                LOG_ERROR("Failed to set declaration: %s (0x%p)\n", mData.mDeclaration.c_str(), address);
             }
         }
         else {
@@ -133,12 +133,12 @@ void Import::setComment(ea_t const address) const {
     if (!mData.mComment.empty()) {
         if (auto const func = get_func(address); func != nullptr && func->start_ea == address) {
             if (!set_func_cmt(func, mData.mComment.c_str(), true)) {
-                LOG_ERROR("Failed to set function comment: %s (0x%X)\n", mData.mComment.c_str(), address);
+                LOG_ERROR("Failed to set function comment: %s (0x%p)\n", mData.mComment.c_str(), address);
             }
         }
         else {
             if (!set_cmt(address, mData.mComment.c_str(), true)) {
-                LOG_ERROR("Failed to set comment: %s (0x%X)\n", mData.mComment.c_str(), address);
+                LOG_ERROR("Failed to set comment: %s (0x%p)\n", mData.mComment.c_str(), address);
             }
         }
     }
@@ -155,7 +155,7 @@ void Import::setBreakpoint(ea_t const address) const {
     if (mData.mBreakpoint.mExist && !exist_bpt(address)) {
         auto const type = mData.mBreakpoint.mType == 0 ? BPT_DEFAULT : mData.mBreakpoint.mType;
         if (!add_bpt(address, mData.mBreakpoint.mSize, type)) {
-            LOG_ERROR("Failed to add breakpoint at 0x%X\n", address);
+            LOG_ERROR("Failed to add breakpoint at 0x%p\n", address);
         }
     }
 }
