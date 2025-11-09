@@ -42,12 +42,12 @@ target_link_directories(sig_importer
 
 target_link_libraries(sig_importer
         "${IDA_LIB_DIR}/ida.lib"
-        "${IDA_LIB_DIR}/idalib.lib"
-        "${IDA_LIB_DIR}/network.lib")
+)
 
 target_compile_definitions(sig_importer PRIVATE
         __NT__
         __IDP__
+        __EA64__
         dont_use_snprintf=snprintf
         dont_use_fgetc=fgetc
         _strtoui64=strtoull
