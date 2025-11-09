@@ -12,13 +12,20 @@ inline bool gDebugOutput{ false };
 #define LOG_DEBUG(format, ...) if (gDebugOutput) { LOG("DEBUG", format, ##__VA_ARGS__) }
 
 namespace shared {
-    std::pair<ea_t, ea_t> getGlobalSpace();
+    std::pair<ea_t, ea_t> getGlobalRange();
     bool hasTypeInfo(ea_t address);
 }
 
 namespace dialog {
+    enum {
+        eGlobalRange,
+        eSegmentRange,
+        eCustomRange,
+    };
+
     nlohmann::json parseJson(const char* fmt2);
-    std::pair<ea_t, ea_t> getSegmentSpace(qstring& name);
+    std::pair<ea_t, ea_t> getSegmentRange(qstring& name);
+    std::pair<ea_t, ea_t> getCustomRange(ea_t& start, ea_t& end);
     std::pair<ea_t, ea_t> mainDialog();
 }
 

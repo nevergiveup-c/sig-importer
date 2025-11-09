@@ -7,7 +7,7 @@
 #include "typeinf.hpp"
 
 namespace shared {
-    std::pair<ea_t, ea_t> getGlobalSpace() {
+    std::pair<ea_t, ea_t> getGlobalRange() {
         return { inf_get_min_ea(), inf_get_max_ea() };
     }
 
@@ -58,8 +58,7 @@ namespace dialog {
             return nlohmann::json{};
         }
     }
-    std::pair<ea_t, ea_t> getSegmentSpace(qstring& name) {
-
+    std::pair<ea_t, ea_t> getSegmentRange(qstring& name) {
         auto const result = ask_str(&name, HIST_SEG, "Enter the segment");
 
         if (!result) {
@@ -82,6 +81,25 @@ namespace dialog {
 
         return { segment->start_ea, end > 0 ? end : eaMax };
     }
+    std::pair<ea_t, ea_t> getCustomRange(ea_t& start, ea_t& end) {
+        bool askResult{};
+
+        askResult = ask_addr(&start, "Enter start address");
+
+        if (!askResult) {
+            LOG_ERROR("Failed to get start address\n");
+            return {};
+        }
+
+        askResult = ask_addr(&end, "Enter end address");
+
+        if (!askResult) {
+            LOG_ERROR("Failed to get end address\n");
+            return {};
+        }
+
+        return {start, end };
+    }
     std::pair<ea_t, ea_t> mainDialog() {
         int choice{ 1 };
 
@@ -90,19 +108,26 @@ namespace dialog {
         "\n"
         "Choose search scope:\n"
         "<~G~lobal (search in entire binary):R>\n"
-        "<~S~egment only (search in selected segment, recommended):R>>\n"
+        "<~S~egment only (search in selected segment, recommended):R>\n"
+        "<~C~ustom (search within range):R>>\n"
         "Debug options:\n"
         "<~E~nable debug output:C>>\n"
         "\n";
 
         if (ask_form(form, &choice, &gDebugOutput) > 0) {
-            if (choice == 0) {
-                return shared::getGlobalSpace();
+            switch (choice) {
+                case eGlobalRange: return shared::getGlobalRange();
+                case eSegmentRange: {
+                    qstring segmentName{".text"};
+                    return getSegmentRange(segmentName);
+                }
+                case eCustomRange: {
+                    ea_t startAddress{ 0x1000 }, endAddress{ 0x100000 };
+                    return getCustomRange(startAddress, endAddress);
+                }
+                default: break;
             }
-            qstring segmentName{".text"};
-            return getSegmentSpace(segmentName);
         }
-
         return { 0, 0 };
     }
 }
