@@ -36,7 +36,7 @@ Import::Import(const nlohmann::json &j) {
                 }
                 else if (op.contains("insn_format")) {
                     if (const auto& layout = op["insn_format"]; layout.is_array() && layout.size() == MAX_INSN_LAYOUT_ARRAY_SIZE) {
-                        operation.mType = eRipCalc;
+                        operation.mType = eAddrCalc;
                         operation.mOpcodeLength = layout[eOpcodeLength].get<uint32_t>();
                         operation.mDisplLength = layout[eDisplLength].get<uint32_t>();
                     }
@@ -128,18 +128,22 @@ bool Import::adjustAddress(ea_t &address) const {
                 return false;
             }
         }
-        else if (op.mType == eRipCalc) {
+        else if (op.mType == eAddrCalc) {
             if (auto const data = address + op.mOpcodeLength; is_loaded(data)) {
-                auto const relOffset = static_cast<int32_t>(get_dword(address + op.mOpcodeLength));
-                auto const nextInsn = address + op.mOpcodeLength + op.mDisplLength;
-                address = nextInsn + relOffset;
+                if (inf_is_64bit()) {
+                    auto const relOffset = static_cast<int32_t>(get_dword(address + op.mOpcodeLength));
+                    auto const nextInsn = address + op.mOpcodeLength + op.mDisplLength;
+                    address = nextInsn + relOffset;
+                }
+                else {
+                    address = get_dword(address + op.mOpcodeLength);
+                }
             }
             else {
                 return false;
             }
         }
     }
-
     return is_loaded(address);
 }
 

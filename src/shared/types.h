@@ -9,7 +9,7 @@ constexpr size_t MAX_INSN_LAYOUT_ARRAY_SIZE = 2;
 
 enum OpType {
     eEaCalc,
-    eRipCalc
+    eAddrCalc
 };
 
 enum InsnArrayIdx {
