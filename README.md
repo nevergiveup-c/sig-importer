@@ -1,22 +1,22 @@
 # Signature Importer
 
-## Description:
+## Description
 IDA Pro 9.x Plugin that automatically transfers the progress between dumps by using special *.json file that defines a number of fields for finding and signing addresses.
 
-## Requirements:
+## Requirements
 IDA Pro 9.x **only**.
 
-## Transfer capabilities:
+## Transfer capabilities
 - Names (functions and variables)
 - Type declarations (functions and variables)
 - Comments (anything)
 - Colors (anything)
 - Breakpoints (anything)
 
-## Installation:
+## Installation
 Put it into plugins folder of **your** IDA installation.
 
-## Usage:
+## Usage
 Launch the plugin by pressing hotkey (by default “**Ctrl+Shift+F10**”) or via **Edit -> Plugin -> Signature Importer**. Select the search area in the window appeared, for large binaries **“Segment only”** or **"Custom"** is recommended.
 
 ![Step 0](images/usage_step_0.png)
@@ -34,15 +34,15 @@ If you select **“Custom”** you will need to enter the range: start and end a
 
 ![Step 3](images/usage_step_3.png)
 
-## Result:
+## Result
 ![Step 4](images/usage_step_4.png)
 
 ![Step 4](images/usage_step_5.png)
 
-## JSON Configuration Format
+## JSON configuration format
 The plugin uses **JSON files** to define signature patterns and their associated metadata. Each pattern is an object in a JSON array.
 
-## Field Reference
+## Field reference
 | Field                      | Required | Type | Description                                                                                                                                                                                                                                                                          |
 |----------------------------|----------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `signature`                | + | string | Byte pattern with wildcards (`?` or `??` for unknown bytes)                                                                                                                                                                                                                          |
@@ -55,7 +55,7 @@ The plugin uses **JSON files** to define signature patterns and their associated
 | `operations[].insn_format` | - | array | Is used for obtaining relative offset. Calculation is performed as follows: for instruction at 0x1000 `"E8 12 34 56 78"` with format `[1,4]`: `rip = 0x1000 + 1 + 4`, `rel_offset = read_dword(0x1000 + 1)`, `final_address = rip + rel_offset`                                      |
 | `breakpoint`               | - | array | Breakpoint configuration `[exist, type, size]`. Type: 0=software+execute (default), 1=write, 2=read, 3=read/write, 4=software, 8=execute, 12=default. Size is irrelevant for software breakpoints. For hardware breakpoints size matters but can't always be set to arbitrary values |
 
-## Example Configuration
+## Example configuration
 ```json
 [
   {
